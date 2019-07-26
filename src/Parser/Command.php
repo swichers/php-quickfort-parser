@@ -67,11 +67,11 @@ class Command
 
         if (strpos($text, '(') !== false) {
             $parts = explode('(', trim($text, ')'));
-            $xy = explode('x', $parts[1]);
+            $xy_values = explode('x', $parts[1]);
             $this->command = $parts[0];
             $this->expansion = [
-                'x' => $xy[0],
-                'y' => $xy[1],
+                'x' => $xy_values[0],
+                'y' => $xy_values[1],
             ];
         }
     }

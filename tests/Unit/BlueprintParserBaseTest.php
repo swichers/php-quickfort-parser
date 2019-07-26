@@ -175,7 +175,6 @@ class BlueprintParserBaseTest extends TestCase
      */
     public function testLayeredProcessLines(): void
     {
-
         $blueprint = [
             '# dig',
             '`,`,`,#',

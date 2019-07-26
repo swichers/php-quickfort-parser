@@ -2,7 +2,9 @@
 
 Library for parsing QuickFort blueprints.
 
-**Example usage:**
+## Example
+
+### Usage
 
 ```php
 <?php declare(strict_types=1);
@@ -22,9 +24,9 @@ $parser->setBlueprint($blueprint);
 $layers = $parser->getLayers();
 ```
 
-**Result:**
+### Result
 
-```
+```text
 [
     ['d'],
     ['d', 'd', 'd'],
@@ -33,13 +35,14 @@ $layers = $parser->getLayers();
 ]
 ```
 
-
-**Not implemented:**
+## Not implemented
 
 * Build layer
 * Place layer
 * Query layer
 
-**Links:**
+## Links
 
-QuickFort http://www.joelpt.net/quickfort/
+* Dwarf Fortress <http://www.bay12games.com/dwarves/>
+* QuickFort <http://www.joelpt.net/quickfort/>
+* QuickFort (GitHub) <https://github.com/joelpt/quickfort>
