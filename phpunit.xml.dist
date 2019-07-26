@@ -6,7 +6,12 @@
 
     <testsuites>
         <testsuite name="Unit tests">
-            <directory suffix="Test.php">tests/Unit</directory>
+            <directory suffix="Test.php">./tests/Unit</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory>./src</directory>
+        </whitelist>
+    </filter>
 </phpunit>
