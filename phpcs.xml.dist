@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<ruleset name="QuickFortParser">
+
+    <arg name="basepath" value="."/>
+    <arg name="colors"/>
+    <arg name="parallel" value="75"/>
+    <arg value="p"/>
+    <arg name="extensions" value="php"/>
+
+    <rule ref="PSR2"/>
+    <rule ref="Generic.Commenting"/>
+    <rule ref="Squiz.Commenting">
+        <exclude name="Squiz.Commenting.LongConditionClosingComment.Missing"/>
+        <exclude name="Squiz.Commenting.ClosingDeclarationComment.Missing"/>
+        <exclude name="Squiz.Commenting.FileComment.Missing"/>
+    </rule>
+
+    <file>./src</file>
+    <file>./tests</file>
+</ruleset>

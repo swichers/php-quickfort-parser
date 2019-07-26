@@ -1,0 +1,33 @@
+# Auto detect
+##   Handle line endings automatically for files detected as
+##   text and leave all files detected as binary untouched.
+##   This will handle all files NOT defined below.
+*                 text=auto eol=lf
+
+# Source code
+*.htm             text diff=html
+*.html            text diff=html
+*.inc             text
+*.php             text diff=php
+
+# Documentation
+*.md              text
+*.txt             text
+AUTHORS           text
+CHANGELOG         text
+CHANGES           text
+CONTRIBUTING      text
+COPYING           text
+copyright         text
+*COPYRIGHT*       text
+INSTALL           text
+license           text
+LICENSE           text
+readme            text
+*README*          text
+TODO              text
+
+# Configs
+.editorconfig     text
+.gitattributes    text
+.gitconfig        text
