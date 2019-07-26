@@ -279,9 +279,11 @@ class BlueprintParserBase implements BlueprintParserInterface
                 $temporary = array_merge($temporary, [$adjusted[count($adjusted) - 1]]);
 
                 $adjusted = $temporary;
-            } else {
-                $adjusted[] = $layer;
+
+                continue;
             }
+
+            $adjusted[] = $layer;
         }
 
         return $adjusted;
