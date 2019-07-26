@@ -318,4 +318,25 @@ class BlueprintParserBaseTest extends TestCase
         $parser->setBlueprint(implode(PHP_EOL, $blueprint));
         $this->assertEquals($expected, $parser->getLayers());
     }
+
+    /**
+     * Validate we can get the original blueprint back.
+     *
+     * @return void
+     */
+    public function testGetBlueprint(): void
+    {
+        $parser = new BlueprintParserBase();
+
+        $blueprint = implode(PHP_EOL, [
+            '#dig',
+            'd(3x3),#',
+            '~,~,~,#',
+            '`,`,`,#',
+            '#,#,#,#',
+        ]);
+
+        $parser->setBlueprint($blueprint);
+        $this->assertEquals($blueprint, $parser->getBlueprint());
+    }
 }
