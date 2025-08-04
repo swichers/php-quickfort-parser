@@ -2,8 +2,10 @@
 
 namespace QuickFort\tests\Unit;
 
+use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\TestCase;
 use QuickFort\Parser\Command;
+use QuickFort\tests\Unit\DataProviders\CommandDataProviders;
 
 /**
  * Class CommandTest.
@@ -16,25 +18,11 @@ class CommandTest extends TestCase
      *
      * @return void
      */
-    public function testIsLayerUp(): void
-    {
-        $command = new Command('#<');
-
-        $this->assertTrue($command->isLayerUp());
-        $this->assertFalse($command->isLayerDown());
-    }
-
-    /**
-     * Validate we properly parse a layer down command.
-     *
-     * @return void
-     */
-    public function testIsLayerDown(): void
-    {
-        $command = new Command('#>');
-
-        $this->assertTrue($command->isLayerDown());
-        $this->assertFalse($command->isLayerUp());
+    #[DataProviderExternal(CommandDataProviders::class, 'layerShifting')]
+    public function testIsLayerUpOrDown(string $commandString, bool $isLayerUp): void {
+        $command = new Command($commandString);
+        $this->assertEquals($isLayerUp, $command->isLayerUp());
+        $this->assertEquals(!$isLayerUp, $command->isLayerDown());
     }
 
     /**
@@ -42,12 +30,17 @@ class CommandTest extends TestCase
      *
      * @return void
      */
-    public function testIsAllowedCommand(): void
+    #[DataProviderExternal(CommandDataProviders::class, 'allowedCommands')]
+    public function testIsAllowedCommand(string $commandString): void
     {
-        $command = new Command('d');
+        $command = new Command($commandString);
         $this->assertTrue($command->isAllowedCommand());
+    }
 
-        $command = new Command('m');
+    #[DataProviderExternal(CommandDataProviders::class, 'disallowedCommands')]
+    public function testIsDisallowedCommand(string $commandString): void
+    {
+        $command = new Command($commandString);
         $this->assertFalse($command->isAllowedCommand());
     }
 
@@ -56,19 +49,11 @@ class CommandTest extends TestCase
      *
      * @return void
      */
-    public function testIsNoOp(): void
+    #[DataProviderExternal(CommandDataProviders::class, 'noopValidity')]
+    public function testIsNoOp(string $commandString, bool $isNoop): void
     {
-        $not_noops = range('a', 'z');
-        foreach ($not_noops as $not_noop) {
-            $command = new Command($not_noop);
-            $this->assertFalse($command->isNoOp());
-        }
-
-        $noops = '#~`';
-        foreach (str_split($noops) as $noop) {
-            $command = new Command($noop);
-            $this->assertTrue($command->isNoOp());
-        }
+        $command = new Command($commandString);
+        $this->assertEquals($isNoop, $command->isNoOp());
     }
 
     /**
@@ -76,13 +61,10 @@ class CommandTest extends TestCase
      *
      * @return void
      */
-    public function testGetFormatted(): void
-    {
-        $command = new Command('d(3x3');
-        $this->assertEquals('d(3x3)', $command->getFormatted());
-
-        $command = new Command('d');
-        $this->assertEquals('d', $command->getFormatted());
+    #[DataProviderExternal(CommandDataProviders::class, 'complexCommandWithBase')]
+    public function testGetFormatted(string $commandString, ?string $baseCommand = null): void {
+        $command = new Command($commandString);
+        $this->assertEquals($commandString, $command->getFormatted());
     }
 
     /**
@@ -90,13 +72,10 @@ class CommandTest extends TestCase
      *
      * @return void
      */
-    public function testHasExpansion(): void
-    {
-        $command = new Command('d(3x3');
-        $this->assertTrue($command->hasExpansion());
-
-        $command = new Command('d');
-        $this->assertFalse($command->hasExpansion());
+    #[DataProviderExternal(CommandDataProviders::class, 'commandHasExpansion')]
+    public function testHasExpansion(string $commandString, bool $hasExpansion): void {
+        $command = new Command($commandString);
+        $this->assertEquals($hasExpansion, $command->hasExpansion());
     }
 
     /**
@@ -104,16 +83,10 @@ class CommandTest extends TestCase
      *
      * @return void
      */
-    public function testGetExpansion(): void
-    {
-        $command = new Command('d');
-        $this->assertEquals(['x' => 1, 'y' => 1], $command->getExpansion());
-
-        $command = new Command('d(3x3)');
-        $this->assertEquals(['x' => 3, 'y' => 3], $command->getExpansion());
-
-        $command = new Command('d(1x3)');
-        $this->assertEquals(['x' => 1, 'y' => 3], $command->getExpansion());
+    #[DataProviderExternal(CommandDataProviders::class, 'commandWithExpansion')]
+    public function testGetExpansion(string $commandString, array $expectedExpansion): void {
+        $command = new Command($commandString);
+        $this->assertEquals($expectedExpansion, $command->getExpansion());
     }
 
     /**
@@ -121,13 +94,10 @@ class CommandTest extends TestCase
      *
      * @return void
      */
-    public function testGetCommand(): void
-    {
-        $command = new Command('d');
-        $this->assertEquals('d', $command->getCommand());
-
-        $command = new Command('d(3x3)');
-        $this->assertEquals('d', $command->getCommand());
+    #[DataProviderExternal(CommandDataProviders::class, 'complexCommandWithBase')]
+    public function testGetCommand(string $commandString, string $baseCommand): void {
+        $command = new Command($commandString);
+        $this->assertEquals($baseCommand, $command->getCommand());
     }
 
     /**
@@ -135,13 +105,10 @@ class CommandTest extends TestCase
      *
      * @return void
      */
-    public function testGetString(): void
-    {
-        $command = new Command('d');
-        $this->assertEquals('d', (string)$command);
-
-        $command = new Command('d(3x3)');
-        $this->assertEquals('d', (string)$command);
+    #[DataProviderExternal(CommandDataProviders::class, 'complexCommandWithBase')]
+    public function testGetString(string $commandString, string $baseCommand): void {
+        $command = new Command($commandString);
+        $this->assertEquals($baseCommand, (string) $command);
     }
 
     /**
@@ -149,12 +116,10 @@ class CommandTest extends TestCase
      *
      * @return void
      */
-    public function testIsComment(): void
+    #[DataProviderExternal(CommandDataProviders::class, 'commentCommand')]
+    public function testIsComment(string $commandString, bool $isComment): void
     {
-        $command = new Command('#');
-        $this->assertTrue($command->isComment());
-
-        $command = new Command('d');
-        $this->assertFalse($command->isComment());
+        $command = new Command($commandString);
+        $this->assertEquals($isComment, $command->isComment());
     }
 }
