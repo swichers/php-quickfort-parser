@@ -13,7 +13,7 @@ class Dig extends BlueprintParserBase
     /**
      * Check if the header is valid for this type of parser.
      *
-     * @return boolean
+     * @return bool
      *   Returns true if the blueprint is a dig command.
      */
     public function checkHeader(): bool

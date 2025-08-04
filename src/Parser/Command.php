@@ -15,14 +15,14 @@ class Command
      *
      * @var string
      */
-    protected $command;
+    protected string $command;
 
     /**
      * A keyed array (x,y) of expansion data.
      *
      * @var array
      */
-    protected $expansion;
+    protected array $expansion;
 
     /**
      * Command constructor.
@@ -79,12 +79,12 @@ class Command
     /**
      * Check if the command is an up layer navigation.
      *
-     * @return boolean
+     * @return bool
      *   Returns true if the command moves up a layer.
      */
     public function isLayerUp(): bool
     {
-        return $this->command == '#<';
+        return $this->command === '#<';
     }
 
     /**
@@ -95,39 +95,39 @@ class Command
      */
     public function isLayerDown(): bool
     {
-        return $this->command == '#>';
+        return $this->command === '#>';
     }
 
     /**
      * Check if the command is allowed.
      *
-     * @return boolean
+     * @return bool
      *   Returns true if the command is an allowed command.
      */
     public function isAllowedCommand(): bool
     {
         $commands = 'djuihrx';
 
-        return in_array($this->command, str_split($commands));
+        return in_array($this->command, str_split($commands), true);
     }
 
     /**
      * Check if the command results in no operation.
      *
-     * @return boolean
+     * @return bool
      *   Returns true if there is no operation to perform.
      */
     public function isNoOp(): bool
     {
         $noops = '#~`';
 
-        return in_array($this->command, str_split($noops));
+        return in_array($this->command, str_split($noops), true);
     }
 
     /**
      * Check if the command was a comment.
      *
-     * @return boolean
+     * @return bool
      *   Returns true if the command is a comment.
      */
     public function isComment(): bool
@@ -162,7 +162,7 @@ class Command
     /**
      * Check if the command has expansion information.
      *
-     * @return boolean
+     * @return bool
      *   Returns true if the command has worthwhile expansion information.
      */
     public function hasExpansion(): bool
