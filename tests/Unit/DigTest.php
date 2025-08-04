@@ -2,8 +2,10 @@
 
 namespace QuickFort\tests\Unit;
 
+use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\TestCase;
 use QuickFort\Parser\Dig;
+use QuickFort\tests\Unit\DataProviders\HeaderValidation;
 
 /**
  * Class DigTest.
@@ -16,25 +18,19 @@ class DigTest extends TestCase
      *
      * @return void
      */
-    public function testCheckHeader(): void
+    #[DataProviderExternal(HeaderValidation::class, 'validDigHeaders')]
+    public function testCheckValidHeadersPass(string $header): void
     {
-        $headers = [
-            "#dig\n",
-            "#dig",
-            "# dig\n",
-            "# dig \n",
-            "# dig, \n",
-            "#dig the same area with d(3x3) specified in row 1, col 1\n",
-            "#dig Stairs leading down to a small room below\n",
-            "#dig start(3; 3; Center tile of a 5-tile square) Regular blueprint comment\n",
-        ];
         $parser = new Dig();
-        foreach ($headers as $header) {
-            $parser->setBlueprint($header);
-            $this->assertTrue($parser->checkHeader());
-        }
+        $parser->setBlueprint($header);
+        $this->assertTrue($parser->checkHeader());
+    }
 
-        $parser->setBlueprint("#build");
+    #[DataProviderExternal(HeaderValidation::class, 'invalidDigHeaders')]
+    public function testCheckInvalidHeadersFail(?string $header): void
+    {
+        $parser = new Dig();
+        $parser->setBlueprint($header);
         $this->assertFalse($parser->checkHeader());
     }
 }

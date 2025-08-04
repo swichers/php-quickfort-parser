@@ -2,3 +2,4 @@ vendor/
 blueprints/
 .idea/
 build/
+*.cache

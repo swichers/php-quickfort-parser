@@ -2,7 +2,7 @@
   "name": "swichers/php-quickfort-parser",
   "description": "Parser for QuickFort blueprint files.",
   "type": "library",
-  "license": "LGPL-3.0",
+  "license": "LGPL-3.0-or-later",
   "authors": [
     {
       "name": "Steven Wichers",
@@ -11,17 +11,21 @@
     }
   ],
   "require": {
-    "php": ">=7.1"
+    "php": "^8.1"
   },
   "autoload": {
     "psr-4": {
       "QuickFort\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "QuickFort\\tests\\": "tests/"
+    }
+  },
   "require-dev": {
-    "phpunit/phpunit": "^6.5",
-    "squizlabs/php_codesniffer": "^3.4",
-    "codacy/coverage": "dev-master"
+    "phpunit/phpunit": "^12.3",
+    "squizlabs/php_codesniffer": "^3.13"
   },
   "scripts": {
     "phpcs": [
