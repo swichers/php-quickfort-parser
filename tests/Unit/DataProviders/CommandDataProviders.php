@@ -2,6 +2,9 @@
 
 namespace QuickFort\tests\Unit\DataProviders;
 
+use QuickFort\Enums\DigCommands;
+use QuickFort\Enums\LayerCommands;
+
 class CommandDataProviders
 {
     public static function commandWithExpansion(): array
@@ -23,14 +26,11 @@ class CommandDataProviders
 
     public static function allowedCommands(): array
     {
-        return [
-            ['d'],
-            ['j'],
-            ['u'],
-            ['h'],
-            ['r'],
-            ['x'],
-        ];
+        $data = [];
+        foreach (DigCommands::cases() as $case) {
+            $data[] = [$case->value];
+        }
+        return $data;
     }
 
     public static function disallowedCommands(): array
@@ -42,16 +42,16 @@ class CommandDataProviders
 
     public static function complexCommandWithBase():array {
         return [
-            ['d', 'd'],
-            ['d(3x3)', 'd'],
-            ['d(1x3)', 'd'],
+            ['d',DigCommands::DIG->value],
+            ['d(3x3)',DigCommands::DIG->value],
+            ['d(1x3)',DigCommands::DIG->value],
         ];
     }
 
     public static function layerShifting():array {
         return [
-            'layer shift up' => ['#<', true],
-            'layer shift down' => ['#>', false],
+            'layer shift up' => [LayerCommands::UP->value, true],
+            'layer shift down' => [LayerCommands::DOWN->value, false],
         ];
     }
 

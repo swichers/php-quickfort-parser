@@ -28,7 +28,7 @@ interface BlueprintParserInterface
      *
      * @return void
      */
-    public function setBlueprint(string $blueprintText);
+    public function setBlueprint(string $blueprintText): void;
 
     /**
      * Get the processed blueprint layers.

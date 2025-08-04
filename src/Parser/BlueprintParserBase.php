@@ -15,30 +15,30 @@ class BlueprintParserBase implements BlueprintParserInterface
      *
      * @var array
      *
-     * @see \QuickFort\Parser\BlueprintParserInterface::getHeader().
+     * @see BlueprintParserInterface::getHeader
      */
-    protected $blueprintHeader;
+    protected array $blueprintHeader;
 
     /**
      * Original blueprint text.
      *
      * @var string
      */
-    protected $originalBlueprint;
+    protected string $originalBlueprint;
 
     /**
      * The lines of the blueprint, minus the header.
      *
      * @var string[]
      */
-    protected $blueprintLines;
+    protected array $blueprintLines;
 
     /**
      * BlueprintParserBase constructor.
      *
-     * @param string $blueprintText A blueprint to initialize with.
+     * @param null|string $blueprintText A blueprint to initialize with.
      */
-    public function __construct(string $blueprintText = null)
+    public function __construct(?string $blueprintText = null)
     {
         if (!empty($blueprintText)) {
             $this->setBlueprint($blueprintText);
@@ -94,7 +94,7 @@ class BlueprintParserBase implements BlueprintParserInterface
      * @return array
      *   An array of header information.
      *
-     * @see \QuickFort\Parser\BlueprintParserInterface::getHeader().
+     * @see BlueprintParserInterface::getHeader
      */
     protected function parseLineAsHeader(string $line): array
     {
@@ -105,7 +105,7 @@ class BlueprintParserBase implements BlueprintParserInterface
         ];
 
         $line = trim($line);
-        if (0 !== stripos($line, '#')) {
+        if (!str_starts_with($line, '#')) {
             return $header;
         }
 
@@ -133,7 +133,7 @@ class BlueprintParserBase implements BlueprintParserInterface
         $line = trim(substr($line, $command_end_pos));
 
         // Parse out starting position information.
-        if (0 === strpos($line, 'start(')) {
+        if (str_starts_with($line, 'start(')) {
             $start_len = strlen('start(');
             $closing_paren_pos = strpos($line, ')');
 

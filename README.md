@@ -1,6 +1,8 @@
 # QuickFort Blueprint Parser
 
-Library for parsing QuickFort blueprints.
+This is a simple library for parsing basic QuickFort blueprints. Only dig
+blueprints are implemented. There are no plans to actively work on this project,
+but pull requests for new features and layer types will be accepted.
 
 ## Example
 
@@ -50,3 +52,29 @@ $layers = $parser->getLayers();
 [![Build Status](https://travis-ci.com/swichers/php-quickfort-parser.svg?branch=master)](https://travis-ci.com/swichers/php-quickfort-parser)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/07a22d50e78e4b66b25d0dad19567d81)](https://www.codacy.com/app/swichers/php-quickfort-parser?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=swichers/php-quickfort-parser&amp;utm_campaign=Badge_Grade)
 [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/07a22d50e78e4b66b25d0dad19567d81)](https://www.codacy.com/app/swichers/php-quickfort-parser?utm_source=github.com&utm_medium=referral&utm_content=swichers/php-quickfort-parser&utm_campaign=Badge_Coverage)
+
+```text
+###*:::=####*:*############################
+                           =++##*******++++
+                              +++++++++*#++
+                                -+++++++*++
+                                 -#####**#+
+               ......            -##*+*#+#*
+           .:=====+--===..       :-#*+*#*#*
+            .    :=               .*###*+#+
+                 :=                .#######
+                 :=                  =#*++*
+                 :=  @@@%:           -+####
+                 -##@@@@@@:          -++++*
+                 -##@####.           =####+
+                 -###@@@%-.          =###++
+                 -######%@:          =###+*
+                 -#####%%@-.         =*##+*
+                 -####%%@@@#+.     .=***#++
+                 -######@@@@%=.    .***#*++
+                 -##=:::-#=---.    +#**++**
+               .=#*..   .*#-     -*########
+               .+##**.  .*##+..+**#####*+##
+#-.:-+###.*################################
+###########################################
+```

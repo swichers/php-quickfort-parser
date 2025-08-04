@@ -2,6 +2,9 @@
 
 namespace QuickFort\Parser;
 
+use QuickFort\Enums\DigCommands;
+use QuickFort\Enums\LayerCommands;
+
 /**
  * Class Command
  *
@@ -15,14 +18,14 @@ class Command
      *
      * @var string
      */
-    protected $command;
+    protected string $command;
 
     /**
      * A keyed array (x,y) of expansion data.
      *
      * @var array
      */
-    protected $expansion;
+    protected array $expansion;
 
     /**
      * Command constructor.
@@ -65,26 +68,38 @@ class Command
             'y' => 1,
         ];
 
-        if (strpos($text, '(') !== false) {
-            $parts = explode('(', trim($text, ')'));
-            $xy_values = explode('x', $parts[1]);
-            $this->command = $parts[0];
-            $this->expansion = [
-                'x' => $xy_values[0],
-                'y' => $xy_values[1],
-            ];
+        if (str_contains($text, '(')) {
+            $this->parseTextWithExpansion($text);
         }
+    }
+
+    /**
+     * Parses command text that contains an expansion marker
+     *
+     * @param string $text The text to parse into command data.
+     *
+     * @return void
+     */
+    protected function parseTextWithExpansion(string $text): void
+    {
+        $parts = explode('(', trim($text, ')'));
+        $xy_values = explode('x', $parts[1]);
+        $this->command = $parts[0];
+        $this->expansion = [
+            'x' => $xy_values[0],
+            'y' => $xy_values[1],
+        ];
     }
 
     /**
      * Check if the command is an up layer navigation.
      *
-     * @return boolean
+     * @return bool
      *   Returns true if the command moves up a layer.
      */
     public function isLayerUp(): bool
     {
-        return $this->command == '#<';
+        return $this->command === LayerCommands::UP->value;
     }
 
     /**
@@ -95,39 +110,37 @@ class Command
      */
     public function isLayerDown(): bool
     {
-        return $this->command == '#>';
+        return $this->command === LayerCommands::DOWN->value;
     }
 
     /**
      * Check if the command is allowed.
      *
-     * @return boolean
+     * @return bool
      *   Returns true if the command is an allowed command.
      */
     public function isAllowedCommand(): bool
     {
-        $commands = 'djuihrx';
-
-        return in_array($this->command, str_split($commands));
+        return DigCommands::tryFrom($this->command) !== null;
     }
 
     /**
      * Check if the command results in no operation.
      *
-     * @return boolean
+     * @return bool
      *   Returns true if there is no operation to perform.
      */
     public function isNoOp(): bool
     {
         $noops = '#~`';
 
-        return in_array($this->command, str_split($noops));
+        return in_array($this->command, str_split($noops), true);
     }
 
     /**
      * Check if the command was a comment.
      *
-     * @return boolean
+     * @return bool
      *   Returns true if the command is a comment.
      */
     public function isComment(): bool
@@ -162,7 +175,7 @@ class Command
     /**
      * Check if the command has expansion information.
      *
-     * @return boolean
+     * @return bool
      *   Returns true if the command has worthwhile expansion information.
      */
     public function hasExpansion(): bool

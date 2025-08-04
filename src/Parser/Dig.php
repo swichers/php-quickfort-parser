@@ -13,16 +13,12 @@ class Dig extends BlueprintParserBase
     /**
      * Check if the header is valid for this type of parser.
      *
-     * @return boolean
+     * @return bool
      *   Returns true if the blueprint is a dig command.
      */
     public function checkHeader(): bool
     {
-        $header = $this->blueprintHeader;
-        if ($header['command'] !== 'dig') {
-            return false;
-        }
-
-        return true;
+        $command = $this->blueprintHeader['command'] ?? null;
+        return $command === 'dig';
     }
 }
