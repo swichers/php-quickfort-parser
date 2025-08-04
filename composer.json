@@ -11,15 +11,19 @@
     }
   ],
   "require": {
-    "php": "^7.0 || ^8.0"
+    "php": "^8.1"
   },
   "autoload": {
     "psr-4": {
       "QuickFort\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "QuickFort\\tests\\": "tests/"
+    }
+  },
   "require-dev": {
-    "codacy/coverage": "dev-master",
     "phpunit/phpunit": "^12.3",
     "squizlabs/php_codesniffer": "^3.13"
   },
