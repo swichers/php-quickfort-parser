@@ -2,7 +2,7 @@
   "name": "swichers/php-quickfort-parser",
   "description": "Parser for QuickFort blueprint files.",
   "type": "library",
-  "license": "LGPL-3.0",
+  "license": "LGPL-3.0-or-later",
   "authors": [
     {
       "name": "Steven Wichers",
