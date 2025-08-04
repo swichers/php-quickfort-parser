@@ -2,6 +2,9 @@
 
 namespace QuickFort\Parser;
 
+use QuickFort\Enums\DigCommands;
+use QuickFort\Enums\LayerCommands;
+
 /**
  * Class Command
  *
@@ -66,14 +69,26 @@ class Command
         ];
 
         if (str_contains($text, '(')) {
-            $parts = explode('(', trim($text, ')'));
-            $xy_values = explode('x', $parts[1]);
-            $this->command = $parts[0];
-            $this->expansion = [
-                'x' => $xy_values[0],
-                'y' => $xy_values[1],
-            ];
+            $this->parseTextWithExpansion($text);
         }
+    }
+
+    /**
+     * Parses command text that contains an expansion marker
+     *
+     * @param string $text The text to parse into command data.
+     *
+     * @return void
+     */
+    protected function parseTextWithExpansion(string $text): void
+    {
+        $parts = explode('(', trim($text, ')'));
+        $xy_values = explode('x', $parts[1]);
+        $this->command = $parts[0];
+        $this->expansion = [
+            'x' => $xy_values[0],
+            'y' => $xy_values[1],
+        ];
     }
 
     /**
@@ -84,7 +99,7 @@ class Command
      */
     public function isLayerUp(): bool
     {
-        return $this->command === '#<';
+        return $this->command === LayerCommands::UP->value;
     }
 
     /**
@@ -95,7 +110,7 @@ class Command
      */
     public function isLayerDown(): bool
     {
-        return $this->command === '#>';
+        return $this->command === LayerCommands::DOWN->value;
     }
 
     /**
@@ -106,9 +121,7 @@ class Command
      */
     public function isAllowedCommand(): bool
     {
-        $commands = 'djuihrx';
-
-        return in_array($this->command, str_split($commands), true);
+        return DigCommands::tryFrom($this->command) !== null;
     }
 
     /**
