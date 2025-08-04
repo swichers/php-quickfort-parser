@@ -105,7 +105,7 @@ class BlueprintParserBase implements BlueprintParserInterface
         ];
 
         $line = trim($line);
-        if (0 !== stripos($line, '#')) {
+        if (!str_starts_with($line, '#')) {
             return $header;
         }
 
@@ -133,7 +133,7 @@ class BlueprintParserBase implements BlueprintParserInterface
         $line = trim(substr($line, $command_end_pos));
 
         // Parse out starting position information.
-        if (0 === strpos($line, 'start(')) {
+        if (str_starts_with($line, 'start(')) {
             $start_len = strlen('start(');
             $closing_paren_pos = strpos($line, ')');
 

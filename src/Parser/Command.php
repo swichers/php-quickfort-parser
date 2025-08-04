@@ -65,7 +65,7 @@ class Command
             'y' => 1,
         ];
 
-        if (strpos($text, '(') !== false) {
+        if (str_contains($text, '(')) {
             $parts = explode('(', trim($text, ')'));
             $xy_values = explode('x', $parts[1]);
             $this->command = $parts[0];
