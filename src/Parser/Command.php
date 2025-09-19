@@ -6,33 +6,39 @@ use QuickFort\Enums\DigCommands;
 use QuickFort\Enums\LayerCommands;
 
 /**
- * Class Command
+ * Represents a command in a QuickFort blueprint.
  *
- * Parses a command string and provides methods to help use it.
+ * This class parses a command string, which can be a simple command like 'd'
+ * or a command with an expansion like 'd(3x3)'. It provides methods to inspect
+ * the command and its properties.
+ *
+ * @package QuickFort\Parser
  */
 class Command
 {
-
     /**
-     * The command.
+     * The command string, without any expansion data.
      *
      * @var string
      */
     protected string $command;
 
     /**
-     * A keyed array (x,y) of expansion data.
+     * An array containing the expansion data for the command.
      *
-     * @var array
+     * The array has two keys: 'x' and 'y', representing the expansion in the
+     * x and y directions.
+     *
+     * @var array{x: int, y: int}
      */
     protected array $expansion;
 
     /**
      * Command constructor.
      *
-     * Expects a simple command like 'd' or an expansion syntax like 'd(3x3)'.
-     *
-     * @param string $text Text to parse into command data.
+     * @param string $text The command string to parse. This can be a simple
+     *                     command like 'd' or a command with an expansion
+     *                     like 'd(3x3)'.
      */
     public function __construct(string $text)
     {
@@ -41,12 +47,13 @@ class Command
     }
 
     /**
-     * Normalize the given text.
+     * Normalizes the given command text.
      *
-     * @param string $text The text to normalize.
+     * This method converts the command text to lowercase and trims whitespace.
      *
-     * @return string
-     *   The normalized text.
+     * @param string $text The command text to normalize.
+     *
+     * @return string The normalized command text.
      */
     protected function normalizeText(string $text): string
     {
@@ -54,9 +61,12 @@ class Command
     }
 
     /**
-     * Parses text into command data.
+     * Parses the normalized command text into its constituent parts.
      *
-     * @param string $text The text to parse into command data.
+     * This method sets the `command` and `expansion` properties based on the
+     * given command text.
+     *
+     * @param string $text The normalized command text to parse.
      *
      * @return void
      */
@@ -74,9 +84,12 @@ class Command
     }
 
     /**
-     * Parses command text that contains an expansion marker
+     * Parses command text that contains an expansion marker.
      *
-     * @param string $text The text to parse into command data.
+     * For example, 'd(2x3)' would be parsed into the command 'd' and the
+     * expansion array ['x' => 2, 'y' => 3].
+     *
+     * @param string $text The command text with an expansion to parse.
      *
      * @return void
      */
@@ -86,16 +99,15 @@ class Command
         $xy_values = explode('x', $parts[1]);
         $this->command = $parts[0];
         $this->expansion = [
-            'x' => $xy_values[0],
-            'y' => $xy_values[1],
+            'x' => (int) $xy_values[0],
+            'y' => (int) $xy_values[1],
         ];
     }
 
     /**
-     * Check if the command is an up layer navigation.
+     * Checks if the command is a layer up command.
      *
-     * @return bool
-     *   Returns true if the command moves up a layer.
+     * @return bool True if the command is a layer up command, false otherwise.
      */
     public function isLayerUp(): bool
     {
@@ -103,10 +115,9 @@ class Command
     }
 
     /**
-     * Check if the command is a down layer navigation.
+     * Checks if the command is a layer down command.
      *
-     * @return boolean
-     *   Returns true if the command moves down a layer.
+     * @return bool True if the command is a layer down command, false otherwise.
      */
     public function isLayerDown(): bool
     {
@@ -114,10 +125,10 @@ class Command
     }
 
     /**
-     * Check if the command is allowed.
+     * Checks if the command is an allowed dig command.
      *
-     * @return bool
-     *   Returns true if the command is an allowed command.
+     * @return bool True if the command is an allowed dig command, false
+     *              otherwise.
      */
     public function isAllowedCommand(): bool
     {
@@ -125,10 +136,11 @@ class Command
     }
 
     /**
-     * Check if the command results in no operation.
+     * Checks if the command is a no-op.
      *
-     * @return bool
-     *   Returns true if there is no operation to perform.
+     * No-op commands are characters that are ignored by the parser.
+     *
+     * @return bool True if the command is a no-op, false otherwise.
      */
     public function isNoOp(): bool
     {
@@ -138,10 +150,9 @@ class Command
     }
 
     /**
-     * Check if the command was a comment.
+     * Checks if the command is a comment.
      *
-     * @return bool
-     *   Returns true if the command is a comment.
+     * @return bool True if the command is a comment, false otherwise.
      */
     public function isComment(): bool
     {
@@ -149,12 +160,12 @@ class Command
     }
 
     /**
-     * Get the formatted command string.
+     * Gets the formatted command string, including expansion information.
      *
-     * Will include expansion information.
+     * For example, a dig command with an expansion of 2x3 would be returned as
+     * 'd(2x3)'.
      *
-     * @return string
-     *   The formatted command string.
+     * @return string The formatted command string.
      */
     public function getFormatted(): string
     {
@@ -173,10 +184,12 @@ class Command
     }
 
     /**
-     * Check if the command has expansion information.
+     * Checks if the command has an expansion.
      *
-     * @return bool
-     *   Returns true if the command has worthwhile expansion information.
+     * An expansion is considered to be present if the expansion in the x or y
+     * direction is greater than 1.
+     *
+     * @return bool True if the command has an expansion, false otherwise.
      */
     public function hasExpansion(): bool
     {
@@ -184,10 +197,9 @@ class Command
     }
 
     /**
-     * Gets command expansion information.
+     * Gets the command expansion information.
      *
-     * @return array[]
-     *   A key-value array of x and y data.
+     * @return array{x: int, y: int} A key-value array of x and y data.
      */
     public function getExpansion(): array
     {
@@ -195,12 +207,9 @@ class Command
     }
 
     /**
-     * Get the command.
+     * Gets the command string, without any expansion information.
      *
-     * Will not return expansion information.
-     *
-     * @return string
-     *   The command text.
+     * @return string The command string.
      */
     public function getCommand(): string
     {
@@ -208,10 +217,11 @@ class Command
     }
 
     /**
-     * Return the command as a string.
+     * Returns the command as a string.
      *
-     * @return string
-     *   The command.
+     * This is an alias for getCommand().
+     *
+     * @return string The command string.
      */
     public function __toString(): string
     {
