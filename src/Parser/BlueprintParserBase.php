@@ -3,31 +3,37 @@
 namespace QuickFort\Parser;
 
 /**
- * Base QuickFort blueprint parser class.
+ * Base class for QuickFort blueprint parsers.
  *
- * Provides a barebones implementation of QuickFort blueprint CSV parsing.
+ * This class provides a barebones implementation of a QuickFort blueprint
+ * parser. It can be extended to create parsers for specific blueprint types,
+ * such as 'dig' blueprints.
+ *
+ * @package QuickFort\Parser
  */
 class BlueprintParserBase implements BlueprintParserInterface
 {
-
     /**
      * A key-value array of header information.
      *
-     * @var array
-     *
-     * @see BlueprintParserInterface::getHeader
+     * @var array{
+     *     command: string|null,
+     *     start: array{x: int, y: int, comment: string}|null,
+     *     comment: string|null
+     * }
+     * @see BlueprintParserInterface::getHeader()
      */
     protected array $blueprintHeader;
 
     /**
-     * Original blueprint text.
+     * The original, unprocessed blueprint text.
      *
      * @var string
      */
     protected string $originalBlueprint;
 
     /**
-     * The lines of the blueprint, minus the header.
+     * The lines of the blueprint, with the header line removed.
      *
      * @var string[]
      */
@@ -36,7 +42,7 @@ class BlueprintParserBase implements BlueprintParserInterface
     /**
      * BlueprintParserBase constructor.
      *
-     * @param null|string $blueprintText A blueprint to initialize with.
+     * @param string|null $blueprintText The blueprint text to parse.
      */
     public function __construct(?string $blueprintText = null)
     {
@@ -47,10 +53,6 @@ class BlueprintParserBase implements BlueprintParserInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @param string $blueprintText The new blueprint text to use.
-     *
-     * @return void
      */
     public function setBlueprint(string $blueprintText): void
     {
@@ -71,12 +73,11 @@ class BlueprintParserBase implements BlueprintParserInterface
     }
 
     /**
-     * Parse a blueprint string into individual lines.
+     * Parses a blueprint string into individual lines.
      *
-     * @param string $text The blueprint to parse into individual lines.
+     * @param string $text The blueprint text to parse.
      *
-     * @return string[]
-     *   The individual lines of the blueprint.
+     * @return string[] An array of blueprint lines.
      */
     protected function textToLines(string $text): array
     {
@@ -87,14 +88,15 @@ class BlueprintParserBase implements BlueprintParserInterface
     }
 
     /**
-     * Parse a blueprint line for header information.
+     * Parses a blueprint line for header information.
      *
-     * @param string $line The line to parse header information from.
+     * The header line is expected to start with a '#' character, followed by
+     * the command, and optional start coordinates and a comment.
      *
-     * @return array
-     *   An array of header information.
+     * @param string $line The line to parse for header information.
      *
-     * @see BlueprintParserInterface::getHeader
+     * @return array An array of header information.
+     * @see BlueprintParserInterface::getHeader()
      */
     protected function parseLineAsHeader(string $line): array
     {
@@ -167,9 +169,6 @@ class BlueprintParserBase implements BlueprintParserInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @return string
-     *   The blueprint text.
      */
     public function getBlueprint(): string
     {
@@ -178,9 +177,6 @@ class BlueprintParserBase implements BlueprintParserInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @return array
-     *   A key-value array of header information.
      */
     public function getHeader(): array
     {
@@ -189,9 +185,6 @@ class BlueprintParserBase implements BlueprintParserInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @return array[]
-     *   A nested array of processed blueprint layers.
      */
     public function getLayers(): array
     {
@@ -199,10 +192,11 @@ class BlueprintParserBase implements BlueprintParserInterface
     }
 
     /**
-     * Process blueprint lines into map layers.
+     * Processes the blueprint lines into a nested array of layers.
      *
-     * @return array[]
-     *   A nested array of processed blueprint layers.
+     * @return array<int, array<int, array<int, string>>> A nested array of
+     *                                                   processed blueprint
+     *                                                   layers.
      */
     protected function processLines(): array
     {
@@ -225,11 +219,11 @@ class BlueprintParserBase implements BlueprintParserInterface
     /**
      * Groups blueprint lines by the layer they belong to.
      *
-     * @param array $lines An array of blueprint lines.
+     * @param string[] $lines An array of blueprint lines.
      *
-     * @return array[]
-     *   An array of blueprint lines grouped into arrays for the layer they
-     *   belong to.
+     * @return array<int, array<int, string>> An array of blueprint lines,
+     *                                        grouped into a nested array by
+     *                                        layer.
      */
     protected function groupLinesByLayer(array $lines): array
     {
@@ -255,10 +249,10 @@ class BlueprintParserBase implements BlueprintParserInterface
     /**
      * Reorders blueprint layers based on layer up or down commands.
      *
-     * @param array $layers A nested array of blueprint layers.
+     * @param array<int, array<int, string>> $layers A nested array of blueprint
+     *                                               layers.
      *
-     * @return array[]
-     *   The original layers reordered by their layer up and down commands.
+     * @return array<int, array<int, string>> The reordered layers.
      */
     protected function adjustLayerOrder(array $layers): array
     {
@@ -290,12 +284,14 @@ class BlueprintParserBase implements BlueprintParserInterface
     }
 
     /**
-     * Process the given layer lines into individual commands.
+     * Processes the given layer lines into individual commands.
      *
-     * @param array[] $layers An array of layers and their lines.
+     * @param array<int, array<int, string>> $layers An array of layers and their
+     *                                               lines.
      *
-     * @return array[]
-     *   An array of layers and their individual commands.
+     * @return array<int, array<int, array<int, string>>> An array of layers and
+     *                                                   their individual
+     *                                                   commands.
      */
     protected function processLayerLines(array $layers): array
     {
@@ -313,14 +309,18 @@ class BlueprintParserBase implements BlueprintParserInterface
     /**
      * Expands command area expansions found in the given layers.
      *
-     * Turns d(2x2) into:
-     *   d,d
-     *   d,d
+     * For example, a command 'd(2x2)' will be expanded into a 2x2 grid of 'd'
+     * commands.
      *
-     * @param array[] $layers The layers to find area expansions within.
+     * @param array<int, array<int, array<int, string>>> $layers The layers to
+     *                                                            process for
+     *                                                            area
+     *                                                            expansions.
      *
-     * @return array[]
-     *   The layers with their area expansions replaced by individual commands.
+     * @return array<int, array<int, array<int, string>>> The layers with their
+     *                                                   area expansions
+     *                                                   replaced by individual
+     *                                                   commands.
      */
     protected function processAreaExpansions(array $layers): array
     {
@@ -347,12 +347,13 @@ class BlueprintParserBase implements BlueprintParserInterface
     }
 
     /**
-     * Parse a blueprint line for available commands.
+     * Parses a blueprint line into an array of commands.
      *
-     * @param string $line The blueprint line to parse commands from.
+     * This method filters out any commands that are not allowed.
      *
-     * @return string[]
-     *   The parsed, filtered, and normalized commands.
+     * @param string $line The blueprint line to parse.
+     *
+     * @return string[] An array of commands.
      */
     protected function parseLine(string $line): array
     {

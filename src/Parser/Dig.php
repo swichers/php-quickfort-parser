@@ -3,18 +3,20 @@
 namespace QuickFort\Parser;
 
 /**
- * QuickFort Dig blueprint parser implementation.
+ * A QuickFort blueprint parser for 'dig' blueprints.
  *
- * Provides dig specific functionality for blueprint parsing.
+ * This class extends the BlueprintParserBase to provide functionality specific
+ * to 'dig' blueprints.
+ *
+ * @package QuickFort\Parser
  */
 class Dig extends BlueprintParserBase
 {
-
     /**
-     * Check if the header is valid for this type of parser.
+     * Checks if the blueprint header is valid for a 'dig' blueprint.
      *
-     * @return bool
-     *   Returns true if the blueprint is a dig command.
+     * @return bool True if the blueprint is a 'dig' blueprint, false
+     *              otherwise.
      */
     public function checkHeader(): bool
     {

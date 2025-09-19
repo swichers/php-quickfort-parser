@@ -1,12 +1,20 @@
 # QuickFort Blueprint Parser
 
-This is a simple library for parsing basic QuickFort blueprints. Only dig
-blueprints are implemented. There are no plans to actively work on this project,
-but pull requests for new features and layer types will be accepted.
+This is a simple library for parsing basic QuickFort blueprints. Only 'dig' blueprints are implemented at this time.
 
-## Example
+There are no plans to actively work on this project, but pull requests for new features and layer types will be accepted.
 
-### Usage
+## Installation
+
+The recommended way to install this library is through [Composer](https://getcomposer.org/).
+
+```bash
+composer require swichers/php-quickfort-parser
+```
+
+## Usage
+
+The following example demonstrates how to parse a 'dig' blueprint.
 
 ```php
 <?php declare(strict_types=1);
@@ -21,12 +29,27 @@ d,d,d,#
 #,#,#,#
 BLUEPRINT_END;
 
+// Create a new Dig parser instance.
 $parser = new Dig();
+
+// Set the blueprint text.
 $parser->setBlueprint($blueprint);
+
+// Check if the blueprint is a valid 'dig' blueprint.
+if (!$parser->checkHeader()) {
+    throw new \Exception('Invalid blueprint type.');
+}
+
+// Get the parsed layers.
 $layers = $parser->getLayers();
+
+// Get the blueprint header information.
+$header = $parser->getHeader();
 ```
 
 ### Result
+
+The `$layers` variable will contain a nested array of the parsed blueprint layers:
 
 ```text
 [
@@ -34,6 +57,16 @@ $layers = $parser->getLayers();
     ['d', 'd', 'd'],
     [2 => 'd'],
     [],
+]
+```
+
+The `$header` variable will contain an array of header information:
+
+```text
+[
+    'command' => 'dig',
+    'start' => null,
+    'comment' => 'A simple dig blueprint',
 ]
 ```
 
